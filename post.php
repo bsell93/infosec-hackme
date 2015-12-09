@@ -14,31 +14,21 @@
 	
 	//if the login form is submitted 
 	if (isset($_POST[$form_names['post_submit']])) {
-		if ($csrf->check_valid('post')) {
-			$_COOKIE['hackme'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme']))); 
-			$_COOKIE['hackme_pass'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme_pass']))); 
-			$check = mysql_query("SELECT * FROM users WHERE username = '".$_COOKIE['hackme']."' AND pass = '".$_COOKIE['hackme_pass']."'");
-	
-			$check2 = mysql_num_rows($check);
-			if ($check2 == 0) {
-				die("<p>Please Login.</p>");
-			} else {		
-				$_POST[$form_names['title']] = mysql_real_escape_string(htmlspecialchars(trim($_POST[$form_names['title']])));
-				$_POST[$form_names['message']] = mysql_real_escape_string(htmlspecialchars(trim($_POST[$form_names['message']])));
-				if(!$_POST[$form_names['title']] | !$_POST[$form_names['message']]) {
-					include('header.php');
-					die('<p>You did not fill in a required field.
-					Please go back and try again!</p>');
-				}
-				
-				mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST[$form_names['title']]."', '". $_POST[message]."', '".time()."')")or die(mysql_error());
-				
-				//mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', CURDATE() )")or die(mysql_error());
-				
-				
-				header("Location: members.php");
+		
+		if($csrf->check_valid('post')) {
+			$_POST[$form_names['title']] = trim($_POST[$form_names['title']]);
+			$_POST[$form_names['message']] = trim($_POST[$form_names['message']]);
+			if(!$_POST[$form_names['title']] | !$_POST[$form_names['message']]) {
+				include('header.php');
+				die('<p>You did not fill in a required field.
+				Please go back and try again!</p>');
 			}
+			
+			mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST[$form_names['title']]."', '". $_POST[$form_names['message']]."', '".time()."')")or die(mysql_error());
+			
+			header("Location: members.php");
 		}
+		$form_names = $csrf->form_names(array('message','post_submit', 'title'), true);
 	}
 ?>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
