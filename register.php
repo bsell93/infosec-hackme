@@ -16,14 +16,6 @@
         <?php
 		//if the registration form is submitted 
 		if (isset($_POST['submit'])) {
-
-			if( exec('grep '.escapeshellarg($_POST['password']).' ./words.txt') ) {
-				die('<p>Create a more complex password</p>');
-			}
-
-			if( strlen($_POST['password']) < 9 ) {
-				die('<p>Create a longer password</p>');
-			}
 			
 			$_POST['uname'] = trim($_POST['uname']);
 			if(!$_POST['uname'] | !$_POST['password'] |
@@ -35,18 +27,18 @@
 			$passwordHash = sha1($_POST['password']);
 			
 			$check = mysql_query("SELECT * FROM users WHERE username = '".$_POST['uname']."'")or die(mysql_error());
-	 
-			//Gives error if user already exist
-			$check2 = mysql_num_rows($check);
-			if ($check2 != 0) {
-				die('<p>Sorry, user name already exisits.</p>');
-			}
-			else
-			{
-				mysql_query("INSERT INTO users (username, pass, fname, lname) VALUES ('".$_POST['uname']."', '". $passwordHash ."', '". $_POST['fname']."', '". $_POST['lname'] ."');")or die(mysql_error());
-				
-				echo "<h3> Registration Successful!</h3> <p>Welcome ". $_POST['fname'] ."! Please log in...</p>";
-			} 
+ 
+ 		//Gives error if user already exist
+ 		$check2 = mysql_num_rows($check);
+		if ($check2 != 0) {
+			die('<p>Sorry, user name already exisits.</p>');
+		}
+		else
+		{
+			mysql_query("INSERT INTO users (username, pass, fname, lname) VALUES ('".$_POST['uname']."', '". $passwordHash ."', '". $_POST['fname']."', '". $_POST['lname'] ."');")or die(mysql_error());
+			
+			echo "<h3> Registration Successful!</h3> <p>Welcome ". $_POST['fname'] ."! Please log in...</p>";
+		} 
         ?>    
         <?php
 		}else{
