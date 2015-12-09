@@ -1,32 +1,43 @@
 <?php
 // Connects to the Database 
+  session_start();
 	include('connect.php');
+	include('csrf.php');
 	connect();
 	
+	$csrf = new csrf();
+	
+	$token_id = $csrf->get_token_id();
+	$token_value = $csrf->get_token($token_id);
+	
+	$form_names = $csrf->form_names(array('message','post_submit', 'title'), false);
+	
 	//if the login form is submitted 
-	if (isset($_POST['post_submit'])) {
-		$_COOKIE['hackme'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme']))); 
-		$_COOKIE['hackme_pass'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme_pass']))); 
-		$check = mysql_query("SELECT * FROM users WHERE username = '".$_COOKIE['hackme']."' AND pass = '".$_COOKIE['hackme_pass']."'");
-
-		$check2 = mysql_num_rows($check);
-		if ($check2 == 0) {
-			die("<p>Please Login.</p>");
-		} else {		
-			$_POST['title'] = mysql_real_escape_string(htmlspecialchars(trim($_POST['title'])));
-			$_POST['message'] = mysql_real_escape_string(htmlspecialchars(trim($_POST['message'])));
-			if(!$_POST['title'] | !$_POST['message']) {
-				include('header.php');
-				die('<p>You did not fill in a required field.
-				Please go back and try again!</p>');
+	if (isset($_POST[$form_names['post_submit']])) {
+		if ($csrf->check_valid('post')) {
+			$_COOKIE['hackme'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme']))); 
+			$_COOKIE['hackme_pass'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme_pass']))); 
+			$check = mysql_query("SELECT * FROM users WHERE username = '".$_COOKIE['hackme']."' AND pass = '".$_COOKIE['hackme_pass']."'");
+	
+			$check2 = mysql_num_rows($check);
+			if ($check2 == 0) {
+				die("<p>Please Login.</p>");
+			} else {		
+				$_POST[$form_names['title']] = mysql_real_escape_string(htmlspecialchars(trim($_POST[$form_names['title']])));
+				$_POST[$form_names['message']] = mysql_real_escape_string(htmlspecialchars(trim($_POST[$form_names['message']])));
+				if(!$_POST[$form_names['title']] | !$_POST[$form_names['message']]) {
+					include('header.php');
+					die('<p>You did not fill in a required field.
+					Please go back and try again!</p>');
+				}
+				
+				mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST[$form_names['title']]."', '". $_POST[message]."', '".time()."')")or die(mysql_error());
+				
+				//mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', CURDATE() )")or die(mysql_error());
+				
+				
+				header("Location: members.php");
 			}
-			
-			mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', '".time()."')")or die(mysql_error());
-			
-			//mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', CURDATE() )")or die(mysql_error());
-			
-			
-			header("Location: members.php");
 		}
 	}
 ?>  
@@ -57,15 +68,16 @@
             <p> do not leave any fields blank... </p>
             
             <form method="post" action="post.php">
-            Title: <input type="text" name="title" maxlength="50"/>
+            Title: <input type="text" name="<?= $form_names['title']; ?>" maxlength="50"/>
             <br />
             <br />
             Posting:
             <br />
             <br />
-            <textarea name="message" cols="120" rows="10" id="message"></textarea>
+            <textarea name="<?= $form_names['message']; ?>" cols="120" rows="10" id="message"></textarea>
             <br />
             <br />
+						<input type="hidden" name="<?= $token_id; ?>" value="<?= $token_value; ?>" />
             <input name="post_submit" type="submit" id="post_submit" value="POST" />
             </form>
         </div>
