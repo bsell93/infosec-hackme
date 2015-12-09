@@ -37,16 +37,3 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY  (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Table containing user information. username should be unique';
 
--- --------------------------------------------------------
-
---
--- Table structure for table `failed-logins`
---
-
-CREATE TABLE IF NOT EXISTS `failed_logins` (
-  `id` int(11) NOT NULL auto_increment,
-  `username` varchar(20) NOT NULL,
-  `date` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `UNAME_FK` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=4;

@@ -5,21 +5,11 @@
 	
 	//if the login form is submitted 
 	if (!isset($_GET['pid'])) {
-
-		$_COOKIE['hackme'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme']))); 
-		$_COOKIE['hackme_pass'] = mysql_real_escape_string(htmlspecialchars(trim($_COOKIE['hackme_pass']))); 
-		$check = mysql_query("SELECT * FROM users WHERE username = '".$_COOKIE['hackme']."' AND pass = '".$_COOKIE['hackme_pass']."'");
-
-		$check2 = mysql_num_rows($check);
-		if ($check2 == 0) {
-			die("<p>Please login.</p>");
-		} else {
-			if (isset($_GET['delpid'])){
-				$_GET['delpid'] = mysql_real_escape_string(htmlspecialchars(trim($_GET['delpid'])));
-				mysql_query("DELETE FROM threads WHERE id = '".$_GET[delpid]."'") or die(mysql_error());
-			}
-			header("Location: members.php");
+		
+		if (isset($_GET['delpid'])){
+			mysql_query("DELETE FROM threads WHERE id = '".$_GET[delpid]."'") or die(mysql_error());
 		}
+			header("Location: members.php");
 	}
 		?>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -38,7 +28,6 @@
 	}
 ?>
 <?php
-	$_GET['pid'] = mysql_real_escape_string(htmlspecialchars(trim($_GET[pid])));
 	$threads = mysql_query("SELECT * FROM threads WHERE id = '".$_GET[pid]."'") or die(mysql_error());
 	while($thisthread = mysql_fetch_array( $threads )){
 ?>

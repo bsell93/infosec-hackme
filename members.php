@@ -5,20 +5,8 @@
 	
 	//if the login form is submitted 
 	if (isset($_POST['submit'])) {
-
-        $failedAttempts = mysql_query("SELECT * from failed_logins ORDER BY date DESC LIMIT 5")or die(mysql_error());
-        $numFailed = mysql_num_rows($failedAttempts);
-        
-        if ( $numFailed > 4 ) { // 5 or more failures
-            mysql_data_seek($failedAttempts, 4); // Seek to fifth failure
-            $fifthFailure = mysql_fetch_array( $failedAttempts );
-            $fifteen_min = 15 * 60; // 15 min x 60 sec
-            if ( (time() - $fifteen_min) < $fifthFailure['date'] ) { // If fifth failure within 15 mins of current time
-                die('<h1>Too many failed attempts. Try again later.</h1>');
-            }
-        }
 		
-		$_POST['username'] = mysql_real_escape_string(htmlspecialchars(trim($_POST['username'])));
+		$_POST['username'] = trim($_POST['username']);
 		if(!$_POST['username'] | !$_POST['password']) {
 			die('<p>You did not fill in a required field.
 			Please go back and try again!</p>');
@@ -38,11 +26,10 @@
 			while($info = mysql_fetch_array( $check )) 	{
 			 	//gives error if the password is wrong
 				if ($passwordHash != $info['pass']) {
-                    mysql_query("INSERT INTO failed_logins (username, date) VALUES('".$_POST['username']."', '".time()."')")or die(mysql_error());
 					die('Incorrect password, please try again.');
 				}
 			}
-            $hour = time() + 3600; 
+			$hour = time() + 3600; 
 			setcookie(hackme, $_POST['username'], $hour); 
 			setcookie(hackme_pass, $passwordHash, $hour);
 			header("Location: members.php");

